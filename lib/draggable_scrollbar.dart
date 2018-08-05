@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 /// Build the Scroll Thumb and label using the current configuration
 typedef Widget ScrollThumbBuilder(
@@ -350,6 +351,7 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
 
   @override
   void dispose() {
+    _labelAnimationController.dispose();
     _thumbAnimationController.dispose();
     _fadeoutTimer?.cancel();
     super.dispose();
