@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 /// Build the Scroll Thumb and label using the current configuration
 typedef Widget ScrollThumbBuilder(
@@ -347,6 +346,16 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
       parent: _labelAnimationController,
       curve: Curves.fastOutSlowIn,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context == null) return;
+
+      _barOffset = getBarDelta(
+        widget.controller.initialScrollOffset,
+        barMaxScrollExtent,
+        viewMaxScrollExtent,
+      );
+    });
   }
 
   @override
@@ -413,6 +422,12 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
   //but only if it isn't dragged
   changePosition(ScrollNotification notification) {
     if (_isDragInProcess) {
+      return;
+    }
+
+    try {
+      context.size;
+    } catch (e) {
       return;
     }
 
